@@ -38,6 +38,8 @@ defineProps({
           <td class="px-6 py-4">{{item.contactNumber}}</td>
           <td class="px-6 py-4">{{item.birthDate}}</td>
           <td class="px-6 py-4">{{item.timeStamp}}</td>
+          <td class="px-6 py-4 cursor-pointer text-center">✏️</td>
+          <td class="px-6 py-4 cursor-pointer text-center">🗑️</td>
         </tr>
       </tbody>
     </table>

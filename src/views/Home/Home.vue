@@ -13,7 +13,7 @@ import { mockTableHeader, data } from "./mockData/table";
 <template>
   <div class="flex flex-col items-center justify-center h-screen">
     <!-- @click="handleFormSubmit" -->
-    <h1 class="font-semibold text-3xl m-10">Simple CRUD x VueJS</h1>
+    <h1 class="font-semibold text-3xl m-10">CRUD - User Details</h1>
     <Form class="grid gap-6 mb-6 md:grid-cols-2 w-full">
       <Input
         label="Email"
@@ -35,7 +35,7 @@ import { mockTableHeader, data } from "./mockData/table";
         labelClass="block my-2 text-sm font-medium text-gray-900 dark:text-white"
         inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
       />
-      <button class="bg-gray-500 my-5 w-full border py-2">Submit</button>
+      <button class="bg-gray-500 my-5 w-full py-2">Submit</button>
     </Form>
     <Table :tableHeaderData="mockTableHeader" :tableData="data" />
   </div>
