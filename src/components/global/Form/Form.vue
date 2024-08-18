@@ -1,15 +1,19 @@
  <script setup>
-  defineProps({
-    formClass: {
-      type: String,
-      default: "",
-    }
-  });
+defineProps({
+  formClass: {
+    type: String,
+    default: ""
+  },
+  submit: {
+    type: Function,
+    default: () => {}
+  }
+});
 </script>
 
  <template>
-  <form @click="$emit('click')" :class="formClass"> 
-    <slot> </slot>
+  <form @submit.prevent="submit" :class="formClass">
+    <slot></slot>
   </form>
 </template>
 

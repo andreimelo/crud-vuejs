@@ -1,5 +1,5 @@
 <script setup>
-defineProps({
+const props = defineProps({
   type: {
     type: String,
     default: "text"
@@ -27,8 +27,10 @@ defineProps({
   label: {
     type: String,
     default: ""
-  }
+  },
+  modelValue: [String, Number]
 });
+const emit = defineEmits(["update:modelValue"]);
 </script>
 
 <template>
@@ -40,9 +42,9 @@ defineProps({
       :class="inputClass"
       :placeholder="placeHolder"
       :required="required"
+      :value="modelValue"
+      @input="$emit('update:modelValue', $event.target.value)"
     />
   </div>
 </template>
 
-<style scoped>
-</style>
