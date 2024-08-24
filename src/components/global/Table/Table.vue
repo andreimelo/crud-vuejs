@@ -43,6 +43,10 @@ defineProps({
         </tr>
       </tbody>
     </table>
+    <div
+      v-if="tableData.length === 0"
+      class="p-4 text-center text-gray-500 dark:text-gray-400"
+    >No data available</div>
   </div>
 </template>
 
