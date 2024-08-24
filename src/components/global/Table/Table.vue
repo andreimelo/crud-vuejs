@@ -33,9 +33,9 @@ defineProps({
           <td
             scope="row"
             class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-          >{{item.emailAddress}}</td>
+          >{{item.email}}</td>
           <td class="px-6 py-4">{{item.name}}</td>
-          <td class="px-6 py-4">{{item.contactNumber}}</td>
+          <td class="px-6 py-4">{{item.contact}}</td>
           <td class="px-6 py-4">{{item.birthDate}}</td>
           <td class="px-6 py-4">{{item.timeStamp}}</td>
           <td class="px-6 py-4 cursor-pointer text-center">✏️</td>
@@ -43,6 +43,10 @@ defineProps({
         </tr>
       </tbody>
     </table>
+    <div
+      v-if="tableData.length === 0"
+      class="p-4 text-center text-gray-500 dark:text-gray-400"
+    >No data available</div>
   </div>
 </template>
 
