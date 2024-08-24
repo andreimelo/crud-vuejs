@@ -1,10 +1,10 @@
 <script setup>
-import { reactive } from "vue";
-// import SampleComponent from "../components/global/Sample";
+import { reactive, onMounted, ref } from "vue";
+import { mockTableHeader, data } from "./mockData/table";
+import { addUser, getUser } from "../../services/user";
 import Table from "../../components/global/Table";
 import Input from "../../components/global/Input";
 import Form from "../../components/global/Form";
-import { mockTableHeader, data } from "./mockData/table";
 
 const form = reactive({
   email: "",
@@ -12,10 +12,40 @@ const form = reactive({
   contact: "",
   birthDate: ""
 });
+const tableData = ref();
 
-const handleSubmitForm = () => {
-  return alert("Form Submitted");
+const fetchUser = async () => {
+  try {
+    let result = await getUser();
+    tableData.value = result;
+  } catch (error) {
+    throw error;
+  }
 };
+
+const handleSubmitForm = async () => {
+  try {
+    let result = await addUser(form);
+    await fetchUser();
+    if (result) {
+      // emty form
+      form.email = "";
+      form.name = "";
+      form.contact = "";
+      form.birthDate = "";
+      alert("User added successfully");
+    }
+  } catch (error) {
+    console.log(error, "User error");
+    alert(error);
+  }
+};
+
+console.log(tableData);
+
+onMounted(() => {
+  fetchUser();
+});
 </script>
 
 <template>
@@ -56,7 +86,7 @@ const handleSubmitForm = () => {
       />
       <button class="bg-gray-500 my-5 w-full py-2">Submit</button>
     </Form>
-    <Table :tableHeaderData="mockTableHeader" :tableData="data" />
+    <Table :tableHeaderData="mockTableHeader" :tableData="tableData" />
   </div>
 </template>
 
