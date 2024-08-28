@@ -1,7 +1,7 @@
 <script setup>
 import { reactive, onMounted, ref } from "vue";
 import { mockTableHeader, data } from "./mockData/table";
-import { addUser, getUser } from "../../services/user";
+import { addUser, getUser, deleteUser } from "../../services/user";
 import Table from "../../components/global/Table";
 import Input from "../../components/global/Input";
 import Form from "../../components/global/Form";
@@ -23,16 +23,29 @@ const fetchUser = async () => {
   }
 };
 
+const removeUser = async userId => {
+  try {
+    const confirmDelete = confirm("Are you sure you want to remove this user?");
+    if (confirmDelete) {
+      let result = await deleteUser(userId);
+      await fetchUser();
+      return result;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
 const handleSubmitForm = async () => {
   try {
     let result = await addUser(form);
-    await fetchUser();
     if (result) {
       // emty form
       form.email = "";
       form.name = "";
       form.contact = "";
       form.birthDate = "";
+      await fetchUser();
       alert("User added successfully");
     }
   } catch (error) {
@@ -86,7 +99,11 @@ onMounted(() => {
       />
       <button class="bg-gray-500 my-5 w-full py-2">Submit</button>
     </Form>
-    <Table :tableHeaderData="mockTableHeader" :tableData="tableData" />
+    <Table
+      :tableHeaderData="mockTableHeader"
+      :tableData="tableData"
+      :handleClickRemove="removeUser"
+    />
   </div>
 </template>
 
