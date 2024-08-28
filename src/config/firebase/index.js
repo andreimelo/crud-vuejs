@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
+import { getFirestore, serverTimestamp } from 'firebase/firestore';
 import { env } from '../env';
 
 const firebaseConfig = {
@@ -12,9 +12,11 @@ const firebaseConfig = {
 	appId             : env['firebase']['appId'],
 	measurementId     : env['firebase']['measurementId'],
 };
-console.log(firebaseConfig);
+// console.log(firebaseConfig);
 const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
 
-export { db };
+const firebaseTimeStamp = serverTimestamp();
+
+export { db, firebaseTimeStamp };
