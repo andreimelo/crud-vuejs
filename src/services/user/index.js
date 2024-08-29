@@ -1,5 +1,12 @@
 import { db, firebaseTimeStamp } from '../../config/firebase';
-import { addDoc, getDocs, deleteDoc, collection, doc } from 'firebase/firestore';
+import {
+	addDoc,
+	getDocs,
+	deleteDoc,
+	collection,
+	doc,
+	updateDoc,
+} from 'firebase/firestore';
 
 const addUser = async (values) => {
 	try {
@@ -7,7 +14,6 @@ const addUser = async (values) => {
 			...values,
 			timeStamp : firebaseTimeStamp,
 		});
-		console.log('User details added successfully with ID:', docRef.id);
 		return docRef;
 	} catch (error) {
 		console.error(error);
@@ -22,7 +28,6 @@ const getUser = async () => {
 			id : doc.id,
 			...doc.data(),
 		}));
-
 		return users;
 	} catch (error) {
 		console.log(error);
@@ -41,4 +46,15 @@ const deleteUser = async (userId) => {
 	}
 };
 
-export { addUser, getUser, deleteUser };
+const updateUser = async (userId, values) => {
+	try {
+		const userDocRef = doc(db, 'users', userId);
+		const docRef = await updateDoc(userDocRef, values);
+		return docRef;
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
+};
+
+export { addUser, getUser, deleteUser, updateUser };
