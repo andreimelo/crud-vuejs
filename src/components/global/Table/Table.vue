@@ -13,6 +13,10 @@ defineProps({
   handleClickRemove: {
     type: Function,
     default: () => {}
+  },
+  handleClickEdit: {
+    type: Function,
+    default: () => {}
   }
 });
 </script>
@@ -44,7 +48,7 @@ defineProps({
           <td class="px-6 py-4">{{item.contact}}</td>
           <td class="px-6 py-4">{{item.birthDate}}</td>
           <td class="px-6 py-4">{{convertTimeStamp(item.timeStamp)}}</td>
-          <td class="px-6 py-4 cursor-pointer text-center">✏️</td>
+          <td class="px-6 py-4 cursor-pointer text-center" @click="handleClickEdit(item)">✏️</td>
           <td class="px-6 py-4 cursor-pointer text-center" @click="handleClickRemove(item.id)">🗑️</td>
         </tr>
       </tbody>

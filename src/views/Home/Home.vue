@@ -1,11 +1,12 @@
 <script setup>
 import { reactive, onMounted, ref } from "vue";
 import { mockTableHeader, data } from "./mockData/table";
-import { addUser, getUser, deleteUser } from "../../services/user";
+import { addUser, getUser, deleteUser, updateUser } from "../../services/user";
 import Table from "../../components/global/Table";
 import Input from "../../components/global/Input";
 import Form from "../../components/global/Form";
 
+// ref
 const form = reactive({
   email: "",
   name: "",
@@ -13,7 +14,9 @@ const form = reactive({
   birthDate: ""
 });
 const tableData = ref();
+const userId = ref(null);
 
+// methods
 const fetchUser = async () => {
   try {
     let result = await getUser();
@@ -21,6 +24,23 @@ const fetchUser = async () => {
   } catch (error) {
     throw error;
   }
+};
+
+const editUser = values => {
+  const { id, email, name, contact, birthDate, timeStamp } = values;
+
+  form.email = email;
+  form.name = name;
+  form.contact = contact;
+  form.birthDate = birthDate;
+  userId.value = id;
+};
+
+const clearForm = () => {
+  form.email = "";
+  form.name = "";
+  form.contact = "";
+  form.birthDate = "";
 };
 
 const removeUser = async userId => {
@@ -38,24 +58,24 @@ const removeUser = async userId => {
 
 const handleSubmitForm = async () => {
   try {
-    let result = await addUser(form);
-    if (result) {
-      // emty form
-      form.email = "";
-      form.name = "";
-      form.contact = "";
-      form.birthDate = "";
+    if (userId.value) {
+      updateUser(userId.value, form);
+      clearForm();
+      await fetchUser();
+      userId.value = "";
+      alert("User updated successfully!");
+    } else {
+      await addUser(form);
+      clearForm();
       await fetchUser();
       alert("User added successfully");
     }
   } catch (error) {
-    console.log(error, "User error");
-    alert(error);
+    throw error;
   }
 };
 
-console.log(tableData);
-
+//effect
 onMounted(() => {
   fetchUser();
 });
@@ -103,6 +123,7 @@ onMounted(() => {
       :tableHeaderData="mockTableHeader"
       :tableData="tableData"
       :handleClickRemove="removeUser"
+      :handleClickEdit="editUser"
     />
   </div>
 </template>
