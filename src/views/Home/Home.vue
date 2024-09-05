@@ -61,8 +61,8 @@ const handleSubmitForm = async () => {
     if (userId.value) {
       updateUser(userId.value, form);
       clearForm();
-      await fetchUser();
       userId.value = "";
+      await fetchUser();
       alert("User updated successfully!");
     } else {
       await addUser(form);
