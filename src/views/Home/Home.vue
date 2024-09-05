@@ -1,6 +1,9 @@
 <script setup>
 import { reactive, onMounted, ref } from "vue";
 import { mockTableHeader, data } from "./mockData/table";
+import { isEmptyObj } from "../../helpers/objectHelper";
+import { maxDate } from "../../utils/date";
+import { validateForm } from "../../helpers/validationHelpers.js";
 import { addUser, getUser, deleteUser, updateUser } from "../../services/user";
 import Table from "../../components/global/Table";
 import Input from "../../components/global/Input";
@@ -15,6 +18,8 @@ const form = reactive({
 });
 const tableData = ref();
 const userId = ref(null);
+const errorMessage = ref({});
+const maxDateHelper = maxDate(ref);
 
 // methods
 const fetchUser = async () => {
@@ -58,6 +63,7 @@ const removeUser = async userId => {
 
 const handleSubmitForm = async () => {
   try {
+    const isValidForm = validateForm(form);
     if (userId.value) {
       updateUser(userId.value, form);
       clearForm();
@@ -65,10 +71,13 @@ const handleSubmitForm = async () => {
       await fetchUser();
       alert("User updated successfully!");
     } else {
-      await addUser(form);
-      clearForm();
-      await fetchUser();
-      alert("User added successfully");
+      if (isEmptyObj(isValidForm)) {
+        await addUser(form);
+        clearForm();
+        await fetchUser();
+        alert("User added successfully");
+      }
+      errorMessage.value = isValidForm;
     }
   } catch (error) {
     throw error;
@@ -86,37 +95,50 @@ onMounted(() => {
     <!-- @click="handleFormSubmit" -->
     <h1 class="font-semibold text-3xl m-10">CRUD - User Details</h1>
     <Form :submit="handleSubmitForm" class="grid gap-6 mb-6 md:grid-cols-2 w-full">
-      <Input
-        label="Email"
-        id="email"
-        type="email"
-        v-model="form.email"
-        labelClass="block my-2 text-sm font-medium text-gray-900 dark:text-white"
-        inputClass="bg-gray-50 border border-red-300 text-gray-900 text-sm  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-      />
-      <Input
-        label="Name"
-        id="name"
-        v-model="form.name"
-        labelClass="block my-2 text-sm font-medium text-red-900 dark:text-white"
-        inputClass="bg-gray-50 border border-red-300 text-red-900 text-sm  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-      />
-      <Input
-        label="Contact No."
-        id="contact"
-        type="number"
-        v-model="form.contact"
-        labelClass="block my-2 text-sm font-medium text-gray-900 dark:text-white"
-        inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-      />
-      <Input
-        label="Birthday"
-        id="birthDate"
-        type="date"
-        v-model="form.birthDate"
-        labelClass="block my-2 text-sm font-medium text-gray-900 dark:text-white"
-        inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-      />
+      <div>
+        <Input
+          label="Email"
+          id="email"
+          type="email"
+          v-model="form.email"
+          labelClass="block my-2 text-sm font-medium text-gray-900 dark:text-white"
+          inputClass="bg-gray-50 border border-red-300 text-gray-900 text-sm  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        />
+        <label class="text-red-500" v-if="errorMessage.email">{{ errorMessage.email }}</label>
+      </div>
+      <div>
+        <Input
+          label="Name"
+          id="name"
+          v-model="form.name"
+          labelClass="block my-2 text-sm font-medium text-red-900 dark:text-white"
+          inputClass="bg-gray-50 border border-red-300 text-red-900 text-sm  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        />
+        <label class="text-red-500" v-if="errorMessage.name">{{ errorMessage.name }}</label>
+      </div>
+      <div>
+        <Input
+          label="Contact No."
+          id="contact"
+          type="number"
+          v-model="form.contact"
+          labelClass="block my-2 text-sm font-medium text-gray-900 dark:text-white"
+          inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        />
+        <label class="text-red-500" v-if="errorMessage.contact">{{ errorMessage.contact }}</label>
+      </div>
+      <div>
+        <Input
+          label="Birthday"
+          id="birthDate"
+          type="date"
+          :max="maxDateHelper"
+          v-model="form.birthDate"
+          labelClass="block my-2 text-sm font-medium text-gray-900 dark:text-white"
+          inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        />
+        <label class="text-red-500" v-if="errorMessage.birthDate">{{ errorMessage.birthDate }}</label>
+      </div>
       <button class="bg-gray-500 my-5 w-full py-2">Submit</button>
     </Form>
     <Table

@@ -28,6 +28,10 @@ const props = defineProps({
     type: String,
     default: ""
   },
+  max: {
+    type: String,
+    default: ""
+  },
   modelValue: [String, Number]
 });
 const emit = defineEmits(["update:modelValue"]);
@@ -43,6 +47,7 @@ const emit = defineEmits(["update:modelValue"]);
       :placeholder="placeHolder"
       :required="required"
       :value="modelValue"
+      :max="max"
       @input="$emit('update:modelValue', $event.target.value)"
     />
   </div>

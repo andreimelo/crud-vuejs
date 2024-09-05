@@ -6,5 +6,6 @@ const convertTimeStamp = (timestamp) => {
 
 	return `${year}-${month}-${day}`;
 };
+const maxDate = (ref) => ref(new Date().toISOString().split('T')[0]);
 
-export { convertTimeStamp };
+export { convertTimeStamp, maxDate };
