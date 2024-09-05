@@ -1,5 +1,5 @@
 <script setup>
-import { convertTimeStamp } from "../../../helpers/date";
+import { convertTimeStamp } from "../../../utils/date";
 
 defineProps({
   tableHeaderData: {
