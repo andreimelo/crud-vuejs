@@ -1,6 +1,6 @@
 # crud-vuejs
 
-Simple crud built in VueJS and Firebase.
+Basic operation CRUD (Create, Read, Update and Delete) built in VueJS and Firebase.
 
 # Folder Structure 
 
